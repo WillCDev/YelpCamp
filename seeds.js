@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Campground = require('./models/campground');
+const Comment = require('./models/comments');
 
 let data = [{
         name: "Festival Hills",
@@ -29,15 +30,35 @@ function seedDB() {
             console.log(err);
         } else {
             console.log('Campgrounds Removed');
-            data.forEach(function (seed) {
-                Campground.create(seed, function (err, data) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log('Seed Added');
-                    }
-                });
+            Comment.remove({}, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    data.forEach(function (seed) {
+                        Campground.create(seed, function (err, campground) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log('Seed Added');
+                                Comment.create({
+                                    text: "This is a generic Comment",
+                                    author: "Will.I.Am"
+                                }, function (err, comment) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        campground.comments.push(comment);
+                                        campground.save();
+                                        console.log('Comment Saved');
+                                    }
+                                });
+                            }
+                        });
+                    });
+                }
             });
         }
     });
 };
+
+module.exports = seedDB;

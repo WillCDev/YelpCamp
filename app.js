@@ -21,7 +21,7 @@ app.set('views',(__dirname + '/views'));
 app.set('view engine', 'ejs');
 app.use('/assets', express.static(__dirname + '/public/'));
 
-// seedDB
+seedDB();
 
 /******************** ROUTES ********************/
 
@@ -68,7 +68,7 @@ app.get('/campgrounds/new', function(req,res) {
 // SHOW - Show a single Campground
 app.get("/campgrounds/:id", function(req,res){
     // Find the Camp Ground with the requested ID
-    Campground.findById(req.params.id, function(err,result){
+    Campground.findById(req.params.id).populate("comments").exec(function(err,result){
         if (err) {
             console.log(err);
         } else {

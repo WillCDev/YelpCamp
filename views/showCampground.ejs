@@ -9,7 +9,18 @@
         <img class="thumbnail col-xs-12" src="<%= campground.image %>">    
    </div>
    
-   <p> <%= campground.description %> </p>
+   <div>
+        <p> <%= campground.description %> </p>    
+   </div>
+   <ul class="comments-container">
+       <% campground.comments.forEach(function(comment){ %>
+           <div class="comment">
+               <li> <%= comment.text %> </li>
+               <em> (<%= comment.author %>) </em>
+           </div>
+       <% }) %>
+   </ul>
+   
 
 </div>
 
