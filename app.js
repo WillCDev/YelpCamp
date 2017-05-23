@@ -37,7 +37,7 @@ app.get('/campgrounds',function(req,res){
             console.log('There was an erroe');
             console.log(err);
         } else {
-            res.render('index',{campgrounds:results, page:'CampGrounds'});
+            res.render('campgrounds/index',{campgrounds:results, page:'CampGrounds'});
         }
     });
 });
@@ -76,6 +76,13 @@ app.get("/campgrounds/:id", function(req,res){
         }
     });
 });
+
+// ===================
+// COMMENTS ROUTES
+// ===================
+app.get('/campgrounds/:id/comments/new', function(req, res){
+    res.render('comments/newComment', {page:'New Comment'});
+})
 
 /************* Set Ports and Initiate Server *************/
 const Port = process.env.PORT || 3000;
