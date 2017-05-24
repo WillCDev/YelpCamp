@@ -62,17 +62,17 @@ app.post('/campgrounds', function(req,res){
 
 // NEW - Show Form to create new Campground
 app.get('/campgrounds/new', function(req,res) {
-    res.render('newCampGround',{page:'New CampGround'});
+    res.render('campgrounds/newCampGround',{page:'New CampGround'});
 });
 
 // SHOW - Show a single Campground
 app.get("/campgrounds/:id", function(req,res){
     // Find the Camp Ground with the requested ID
-    Campground.findById(req.params.id).populate("comments").exec(function(err,result){
+    Campground.findById(req.params.id).populate("comments").exec(function(err,campground){
         if (err) {
             console.log(err);
         } else {
-            res.render('showCampGround', {page:'Campsite Info', campground:result});
+            res.render('campgrounds/showCampGround', {page:'Campsite Info', campground:campground});
         }
     });
 });
@@ -80,9 +80,38 @@ app.get("/campgrounds/:id", function(req,res){
 // ===================
 // COMMENTS ROUTES
 // ===================
+// NEW Route
 app.get('/campgrounds/:id/comments/new', function(req, res){
-    res.render('comments/newComment', {page:'New Comment'});
-})
+    Campground.findById(req.params.id, function(err, campground){
+        if (err){
+            console.log(err);
+        } else {
+            res.render('comments/newComment', {page:'New Comment', campground:campground});
+        }
+    });
+});
+
+// CREATE Route
+app.post('/campgrounds/:id/comments', function(req, res){
+    // Lookup Campsite using ID
+    Campground.findById(req.params.id, function(err, campground){
+        if (err){
+            console.log(err);
+            res.redirect('/campgrounds');
+        } else {
+            //Create Comment
+            Comment.create(req.body.comment, function(err, comment){
+                if (err){
+                    console.log(err);
+                } else {
+                    campground.comments.push(comment);
+                    campground.save();
+                    res.redirect('/campgrounds/' + campground._id);
+                }
+            });
+        }
+    });
+});
 
 /************* Set Ports and Initiate Server *************/
 const Port = process.env.PORT || 3000;
