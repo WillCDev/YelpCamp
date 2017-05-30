@@ -1,120 +1,69 @@
-// Require Dependencies
-const   express     = require('express');
-let     app         = express();
-const   ejs         = require('ejs'),
-        request     = require('request'),
-        bodyParser  = require('body-parser'),
-        mongoose    = require('mongoose');
+// Require App Dependencies
+const   express             = require('express'),
+        ejs                 = require('ejs'),
+        request             = require('request'),
+        bodyParser          = require('body-parser'),
+        methodOverride      = require('method-override'),
+        mongoose            = require('mongoose'),
+        passport            = require('passport'),
+        localStrategy       = require('passport-local'),
+        passportMongoose    = require('passport-local-mongoose'),
+        session             = require('express-session');
 
-// Required Models
-let Campground = require('./models/campground');
-let Comment = require('./models/comments');
-let seedDB = require('./seeds');
 
-// Setup Required Modules
+// Require Models
+let     Campground  = require('./models/campgroundModel');
+let     Comment     = require('./models/commentsModel');
+let     User        = require('./models/userModel');
+let     seedDB      = require('./seeds');
+
+//Require Routes
+let     campgroundRoutes = require('./routes/campgroundRoutes');
+let     commentRoutes    = require('./routes/commentRoutes');
+let     indexRoutes      = require('./routes/indexRoutes');
+
+// Initiate App and Connect to DB
+let app = express();
 mongoose.connect("mongodb://localhost/yelp_camp");
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
 
 //Setup View Engine and Static Files Paths
 app.set('views',(__dirname + '/views'));
 app.set('view engine', 'ejs');
 app.use('/assets', express.static(__dirname + '/public/'));
 
-seedDB();
+// Passport Configuration
+app.use(session({
+    secret: "dnfed7n209unerf09n8ew0fd9n8we0fn",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 30 * 60 * 1000
+    }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-/******************** ROUTES ********************/
-
-app.get('/',function(req,res){
-    res.render('Home',{page:'Home'});
+app.use(function(req, res, next){
+   res.locals.currentUser = req.user;
+   next();
 });
 
-// INDEX - Show all Campgrounds
-app.get('/campgrounds',function(req,res){
-    // Get all Campgrounds
-    Campground.find({}, function(err, results){
-        if (err) {
-            console.log('There was an erroe');
-            console.log(err);
-        } else {
-            res.render('campgrounds/index',{campgrounds:results, page:'CampGrounds'});
-        }
-    });
-});
+// Initialize Routes
+app.use(indexRoutes);
+app.use('/campgrounds/:id/comments', commentRoutes);
+app.use('/campgrounds', campgroundRoutes);
 
-// CREATE - Add new campground to DB
-app.post('/campgrounds', function(req,res){
-    // get data from form
-    let name = req.body.name;
-    let image = req.body.image;
-    let desc = req.body.description;
-    let newItem = {name:name, image:image, description: desc};
-    // add to campsite array
-    Campground.create(newItem,function(err,result){
-        if (err){
-            console.log('There was an Error');
-            console.log(err);
-        } else {
-            res.redirect('/campgrounds');
-        }
-    });
-});
+// seedDB();
 
-// NEW - Show Form to create new Campground
-app.get('/campgrounds/new', function(req,res) {
-    res.render('campgrounds/newCampGround',{page:'New CampGround'});
-});
-
-// SHOW - Show a single Campground
-app.get("/campgrounds/:id", function(req,res){
-    // Find the Camp Ground with the requested ID
-    Campground.findById(req.params.id).populate("comments").exec(function(err,campground){
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('campgrounds/showCampGround', {page:'Campsite Info', campground:campground});
-        }
-    });
-});
-
-// ===================
-// COMMENTS ROUTES
-// ===================
-// NEW Route
-app.get('/campgrounds/:id/comments/new', function(req, res){
-    Campground.findById(req.params.id, function(err, campground){
-        if (err){
-            console.log(err);
-        } else {
-            res.render('comments/newComment', {page:'New Comment', campground:campground});
-        }
-    });
-});
-
-// CREATE Route
-app.post('/campgrounds/:id/comments', function(req, res){
-    // Lookup Campsite using ID
-    Campground.findById(req.params.id, function(err, campground){
-        if (err){
-            console.log(err);
-            res.redirect('/campgrounds');
-        } else {
-            //Create Comment
-            Comment.create(req.body.comment, function(err, comment){
-                if (err){
-                    console.log(err);
-                } else {
-                    campground.comments.push(comment);
-                    campground.save();
-                    res.redirect('/campgrounds/' + campground._id);
-                }
-            });
-        }
-    });
-});
-
-/************* Set Ports and Initiate Server *************/
+// Set Ports and Initiate Server
 const Port = process.env.PORT || 3000;
-app.listen(Port, process.env.IP, function(){
+app.listen(Port, process.env.IP, function () {
     console.log('YelpCamp is now running...');
 });

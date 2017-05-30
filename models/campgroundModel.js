@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-let Comment = require('../models/comments');
+const mongoose  = require('mongoose');
+let   Comment   = require('../models/commentsModel');
 
 let campgroundSchema = new mongoose.Schema({
     name: String,

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Campground = require('./models/campground');
-const Comment = require('./models/comments');
+const Campground = require('./models/campgroundModel');
+const Comment = require('./models/commentsModel');
 
 const genDescription = "Sister bacon super rage anonymous woman crying i lied one does not simply blizzard facebook keyboard. Sexy time scumbag win movie woman in the kitchen bear not bad on feel like a sir thor. So Hardcore le girlfriend simpson oh stop it, you finals good guy lois i'm watching u true love. Charlie Sheen lose stoned female mother fuuuuuuuuuuccckkkkkk boobs love avenger. Collection le derp eat angry birds pikachu note men father. Grin michelle facepalm just okay le friend cellphone if you know what i mean cat monday diablo 3. Megusta fap computer venenatis you don't say? Amet resident evil dolar clinton easter in gasp essay. Derp 9000 food sex gtfo nerd cereal guy students luke so close lol. Like a boss right mother of god y u no nap scared homework gentlemen. Always not okay freddie mercury.";
 
