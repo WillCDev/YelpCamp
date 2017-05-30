@@ -36,10 +36,15 @@ router.post('/', isLoggedIn, function (req, res) {
     let name = req.body.name;
     let image = req.body.image;
     let desc = req.body.description;
+    let author = {
+        id: req.user._id,
+        username: req.user.username
+    };
     let newItem = {
         name: name,
         image: image,
-        description: desc
+        description: desc,
+        author: author
     };
     // add to campsite array
     Campground.create(newItem, function (err, result) {
@@ -47,7 +52,7 @@ router.post('/', isLoggedIn, function (req, res) {
             console.log('There was an Error');
             console.log(err);
         } else {
-            res.redirect('/campgrounds/');
+            res.redirect('/campgrounds');
         }
     });
 });
