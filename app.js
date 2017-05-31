@@ -8,8 +8,8 @@ const   express             = require('express'),
         passport            = require('passport'),
         localStrategy       = require('passport-local'),
         passportMongoose    = require('passport-local-mongoose'),
-        session             = require('express-session');
-
+        session             = require('express-session'),
+        flash               = require('connect-flash');
 
 // Require Models
 let     Campground  = require('./models/campgroundModel');
@@ -26,11 +26,13 @@ let     indexRoutes      = require('./routes/indexRoutes');
 let app = express();
 mongoose.connect("mongodb://localhost/yelp_camp");
 
+// Initiate other App Dependencies
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
+app.use(flash()); //<- Must be before Passport Config
 
-//Setup View Engine and Static Files Paths
+// Setup View Engine and Static Files Paths
 app.set('views',(__dirname + '/views'));
 app.set('view engine', 'ejs');
 app.use('/assets', express.static(__dirname + '/public/'));
@@ -53,6 +55,8 @@ passport.deserializeUser(User.deserializeUser());
 // Make req.User available to all Templates
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
+   res.locals.error = req.flash("error");
+   res.locals.success = req.flash("success");
    next();
 });
 

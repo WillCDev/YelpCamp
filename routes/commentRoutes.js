@@ -27,12 +27,15 @@ router.post('/', middleware.isLoggedIn, function (req, res) {
     Campground.findById(req.params.id, function (err, campground) {
         if (err) {
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
             res.redirect('/campgrounds');
         } else {
             //Create Comment
             Comment.create(req.body.comment, function (err, comment) {
                 if (err) {
                     console.log(err);
+                    req.flash("error", "Something went wrong: " + err.message);
+                    res.redirect('back');
                 } else {
                     // Add Username and ID to Comment
                     comment.author.username = req.user.username;
@@ -69,6 +72,7 @@ router.put('/:commentId', middleware.checkCommentAuth, function (req, res){
     Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, function(err, updatedComment){
         if (err){
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
             res.redirect('back');
         } else {
             res.redirect('../');
@@ -81,6 +85,7 @@ router.delete('/:commentId', middleware.checkCommentAuth, function(req, res){
     Comment.findByIdAndRemove(req.params.commentId, function(err, comment){
         if (err){
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
             res.redirect('back');
         } else {
             res.redirect('/campgrounds/' + req.params.id);

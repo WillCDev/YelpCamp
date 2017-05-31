@@ -51,9 +51,11 @@ router.post('/', middleware.isLoggedIn, function (req, res) {
     // add to campsite array
     Campground.create(newItem, function (err, result) {
         if (err) {
-            console.log('There was an Error');
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
+            res.redirect("back");
         } else {
+            req.flash("success", "Congrats, you have created a new campsite: " + newItem.name);
             res.redirect('/campgrounds');
         }
     });
@@ -65,6 +67,8 @@ router.get("/:id", function (req, res) {
     Campground.findById(req.params.id).populate("comments").exec(function (err, foundCampground) {
         if (err) {
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
+            res.redirect("back");
         } else {
             res.render('campgrounds/showCampGround', {
                 page: 'Campsite Info',
@@ -94,9 +98,11 @@ router.put('/:id', middleware.checkCampgroundAuth, function (req, res) {
     Campground.findByIdAndUpdate(req.params.id, req.body.campground, function (err, updatedCampground) {
         if (err) {
             console.log(err);
+            req.flash("error", "There was an error with your Edit: " + err.message);
             res.redirect('/campgrounds');
         } else {
-            res.redirect("back");
+            req.flash("success", "Congrats, you've updated your campground.");
+            res.redirect("/campgrounds/" + req.params.id);
         }
     });
 });
@@ -106,8 +112,10 @@ router.delete('/:id', middleware.checkCampgroundAuth, function(req, res){
     Campground.findByIdAndRemove(req.params.id, function(err, deletedCamground){
         if(err){
             console.log(err);
-            res.redirect('/campgrounds');
+            req.flash("error", "Something went wrong: " + err.message);
+            res.redirect("back");
         } else {
+            req.flash("success", "Your Campground was successfully deleted.");
             res.redirect('/campgrounds');
         }
     });

@@ -12,7 +12,7 @@ let     User        = require('../models/userModel');
 // Catch All Route
 router.get('/', function (req, res) {
     res.render('Home', {
-        page: 'Home'
+        page: 'Home',
     });
 });
 
@@ -31,9 +31,11 @@ router.post('/register', middleware.userToLowerCase, function (req, res) {
     User.register(newUser, req.body.password, function (err, user) {
         if (err) {
             console.log(err);
+            req.flash("error", "Something went wrong: " + err.message);
             return res.redirect('/register');
         }
         passport.authenticate("local")(req, res, function () {
+            req.flash("success", "Congrats. You have created an account. Welcome");
             res.redirect('/campgrounds');
         });
     });
@@ -47,14 +49,17 @@ router.get('/login', function (req, res) {
 });
 
 // LOGIN User
-router.post('/login', middleware.userToLowerCase, passport.authenticate("local", {
-    successRedirect: '/campgrounds',
-    failureRedirect: '/login'
-}), function () {});
+router.post('/login', middleware.userToLowerCase, function (req, res){
+    passport.authenticate("local", {
+        successRedirect: '/campgrounds',
+        failureRedirect: '/login'   
+    });
+});
 
 // LOGOUT User
 router.get('/logout', function(req, res){
     req.logout();
+    req.flash("success", "You have successfully logged out.");
     res.redirect('/campgrounds');
 });
 

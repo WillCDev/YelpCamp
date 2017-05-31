@@ -7,6 +7,7 @@ var middlewareObj = {
         if (req.isAuthenticated()) {
             return next();
         } else {
+            req.flash("error", "You need to be Logged In to do that.");
             res.redirect("/login");
         }
     },
@@ -27,11 +28,13 @@ var middlewareObj = {
                     if (req.user._id.equals(foundCampground.author.id)) {
                         return next();
                     } else {
+                        req.flash("error", "You do not have access to do that.");
                         res.redirect("back");
                     }
                 }
             });
         } else {
+            req.flash("error", "You need to be Logged In to do that.");
             res.redirect('back');
         }
     },
@@ -47,11 +50,13 @@ var middlewareObj = {
                     if (req.user._id.equals(foundComment.author.id)) {
                         return next();
                     } else {
+                        req.flash("error", "You do not have access to do that.");
                         return res.redirect('back');
                     }
                 }
             });
         } else {
+            req.flash("error", "You need to be Logged In to do that.");
             res.redirect('/login');
         }
     }
