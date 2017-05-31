@@ -36,6 +36,7 @@ router.get('/new', middleware.isLoggedIn,  function (req, res) {
 router.post('/', middleware.isLoggedIn, function (req, res) {
     // get data from form
     let name = req.body.name;
+    let price = req.body.price;
     let image = req.body.image;
     let desc = req.body.description;
     let author = {
@@ -44,6 +45,7 @@ router.post('/', middleware.isLoggedIn, function (req, res) {
     };
     let newItem = {
         name: name,
+        price: price,
         image: image,
         description: desc,
         author: author

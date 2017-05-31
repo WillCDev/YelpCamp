@@ -49,12 +49,10 @@ router.get('/login', function (req, res) {
 });
 
 // LOGIN User
-router.post('/login', middleware.userToLowerCase, function (req, res){
-    passport.authenticate("local", {
+router.post('/login', middleware.userToLowerCase, passport.authenticate("local", {
         successRedirect: '/campgrounds',
         failureRedirect: '/login'   
-    });
-});
+}));
 
 // LOGOUT User
 router.get('/logout', function(req, res){
