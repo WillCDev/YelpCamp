@@ -4,6 +4,7 @@ const   express     = require('express'),
 
 
 // Require Models
+let     middleware  = require('../middleware');
 let     Campground  = require('../models/campgroundModel');
 let     Comment     = require('../models/commentsModel');
 let     User        = require('../models/userModel');
@@ -23,7 +24,7 @@ router.get('/register', function (req, res) {
 });
 
 // CREATE new User
-router.post('/register', userToLowerCase, function (req, res) {
+router.post('/register', middleware.userToLowerCase, function (req, res) {
     let newUser = new User({
         username: req.body.username
     });
@@ -46,7 +47,7 @@ router.get('/login', function (req, res) {
 });
 
 // LOGIN User
-router.post('/login', userToLowerCase, passport.authenticate("local", {
+router.post('/login', middleware.userToLowerCase, passport.authenticate("local", {
     successRedirect: '/campgrounds',
     failureRedirect: '/login'
 }), function () {});
@@ -56,20 +57,5 @@ router.get('/logout', function(req, res){
     req.logout();
     res.redirect('/campgrounds');
 });
-
-
-// Convert UN to LowerCase Middleware
-function userToLowerCase(req, res, next) {
-    req.body.username = req.body.username.toLowerCase();
-    return next();
-};
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        res.redirect("/login");
-    }
-};
 
 module.exports = router;

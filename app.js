@@ -28,7 +28,7 @@ mongoose.connect("mongodb://localhost/yelp_camp");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(methodOverride('_method'));
 
 //Setup View Engine and Static Files Paths
 app.set('views',(__dirname + '/views'));
@@ -50,6 +50,7 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Make req.User available to all Templates
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
    next();

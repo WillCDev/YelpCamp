@@ -11,3 +11,15 @@
 .blue {
     color: blue;
 }
+.campsiteButton {
+    display: inline;
+}
+
+hr {
+    margin: 8px;
+}
+
+.comments-container{
+    padding-top: 10px;
+    padding-bottom: 8px;
+}
