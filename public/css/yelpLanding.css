@@ -1,0 +1,81 @@
+body {
+    background-color: #000;
+}
+
+#landing-header{
+    color: #fff;
+    z-index: 1;
+    position: relative;
+    text-align: center;
+    padding-top: 40vh;
+}
+#landing-header h1{
+    text-shadow: 0px 0px 8px #222; 
+}
+#landing-header a{
+    box-shadow: 0px 0px 8px #222; 
+}
+
+.slideshow{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.slideshow li{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    z-index: 0;
+    animation: imageAnimation 50s linear infinite;
+}
+
+.slideshow li:nth-child(1){
+    background-image: url(http://www.nemoequipment.com/wordpress/wp-content/uploads/2014/06/campsies.jpg);
+    animation-delay: 0s;
+}
+.slideshow li:nth-child(2){
+    background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/b2/95/51b295d043eaf1127b03fcb28040a67d.jpg);
+    animation-delay: 10s;
+}
+.slideshow li:nth-child(3){
+    background-image: url(https://s-media-cache-ak0.pinimg.com/originals/af/a8/b9/afa8b95301560f25fbbf9df3b34666eb.jpg);
+    animation-delay: 20s;
+}
+.slideshow li:nth-child(4){
+    background-image: url(https://coolcamping.com/system/boxes/459/campsites-in-France-original.jpg);
+    animation-delay: 30s;
+}
+.slideshow li:nth-child(5){
+    background-image: url(http://www.uniqhotels.com/media/hotels/44/4.%20ecocamp%20community%20dome%201.jpg);
+    animation-delay: 40s;
+}
+
+@keyframes imageAnimation{
+    0% {
+        opacity: 0;
+        animation-timing-function: ease-in;
+    }
+    10%{
+        opacity: 1;
+        animation-timing-function: ease-out;
+    }
+    20% {
+        opacity: 1;
+    }
+    30% {
+        opacity: 0;
+    }
+}
