@@ -59,7 +59,21 @@ var middlewareObj = {
             req.flash("error", "You need to be Logged In to do that.");
             res.redirect('/login');
         }
-    }
+    },
+
+    compareDates: function(commentDate){
+        let  diffSec  = (Math.abs((new Date()) - commentDate))/1000; // Calculate the Time difference in Seconds
+        let  diffMin  = Math.floor(diffSec/60), // round down
+             diffHour = Math.floor(diffSec/(60*60)), // round down
+             diffDay  = Math.floor(diffSec/(60*60*24)); // round down
+        if (diffHour < 1){
+            return diffMin + " mins ago";
+        } else if (diffDay < 1 ){
+            return diffHour + " hours ago";
+        } else {
+            return diffDay + " days ago";
+        }
+   }
 };
 
 module.exports = middlewareObj;
