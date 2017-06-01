@@ -71,7 +71,7 @@ router.get("/:id", function (req, res) {
             console.log(err);
             req.flash("error", "Something went wrong: " + err.message);
             res.redirect("back");
-        } else {
+        } else {        
             res.render('campgrounds/showCampGround', {
                 page: 'Campsite Info',
                 campground: foundCampground

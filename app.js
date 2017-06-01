@@ -52,11 +52,26 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Make req.User available to all Templates
+// Make req.User and req.flash available to all Templates
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
    res.locals.error = req.flash("error");
    res.locals.success = req.flash("success");
+   // Make Date Comparison function available to all Templates
+   res.locals.compareDates = function(commentDate){
+        let  diffNum  = Math.abs((new Date()) - commentDate);
+        let  diffdate = new Date(diffNum);
+        let  diffMin  = diffdate.getUTCMinutes(),
+             diffHour = diffdate.getUTCHours(),
+             diffDay  = diffdate.getUTCDay();
+        if (diffMin < 60){
+            return diffMin + " mins ago";
+        } else if (diffHour < 24 ){
+            return diffHour + " hours ago";
+        } else {
+            return diffDay + " days ago";
+        }
+   };
    next();
 });
 

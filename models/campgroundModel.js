@@ -3,8 +3,8 @@ let   Comment   = require('../models/commentsModel');
 let   User      = require('../models/userModel');
 
 let campgroundSchema = new mongoose.Schema({
-    name: {type: String, require: true}
-    price: {type: Number, required: true}
+    name: {type: String, require: true},
+    price: {type: Number, required: true},
     image: String,
     description: String,
     comments : [{
