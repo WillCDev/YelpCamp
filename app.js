@@ -59,14 +59,13 @@ app.use(function(req, res, next){
    res.locals.success = req.flash("success");
    // Make Date Comparison function available to all Templates
    res.locals.compareDates = function(commentDate){
-        let  diffNum  = Math.abs((new Date()) - commentDate);
-        let  diffdate = new Date(diffNum);
-        let  diffMin  = diffdate.getUTCMinutes(),
-             diffHour = diffdate.getUTCHours(),
-             diffDay  = diffdate.getUTCDay();
-        if (diffMin < 60){
+        let  diffSec  = (Math.abs((new Date()) - commentDate))/1000; // Calculate the Time difference in Seconds
+        let  diffMin  = Math.floor(diffSec/60), // round down
+             diffHour = Math.floor(diffSec/(60*60)), // round down
+             diffDay  = Math.floor(diffSec/(60*60*24)); // round down
+        if (diffHour < 1){
             return diffMin + " mins ago";
-        } else if (diffHour < 24 ){
+        } else if (diffDay < 1 ){
             return diffHour + " hours ago";
         } else {
             return diffDay + " days ago";
